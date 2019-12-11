@@ -4,7 +4,9 @@ import argparse
 import os
 import pandas as pd
 
+#from sklearn.externals import joblib
 from sklearn.externals import joblib
+from sklearn.ensemble import RandomForestClassifier
 
 ## TODO: Import any additional libraries you need to define a model
 
@@ -39,6 +41,13 @@ if __name__ == '__main__':
     parser.add_argument('--data-dir', type=str, default=os.environ['SM_CHANNEL_TRAIN'])
     
     ## TODO: Add any additional arguments that you will need to pass into your model
+    ## https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html
+    parser.add_argument('--n_estimators', type=int, default=100)
+    parser.add_argument('--random_state', type=int, default=0)
+    parser.add_argument('--max_depth', type=int, default=2)
+    parser.add_argument('--min_impurity_decrease', type=float, default=1e-7)
+    
+  
     
     # args holds all passed-in arguments
     args = parser.parse_args()
@@ -51,16 +60,12 @@ if __name__ == '__main__':
     train_y = train_data.iloc[:,0]
     train_x = train_data.iloc[:,1:]
     
-    
     ## --- Your code here --- ##
-    
-
     ## TODO: Define a model 
-    model = None
-    
+    model = RandomForestClassifier(n_estimators=args.n_estimators, random_state=args.random_state, max_depth=args.max_depth, min_impurity_decrease=args.min_impurity_decrease)
     
     ## TODO: Train the model
-    
+    model.fit(train_x, train_y)  
     
     
     ## --- End of your code  --- ##
